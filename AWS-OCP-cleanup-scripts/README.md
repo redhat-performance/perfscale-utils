@@ -4,31 +4,33 @@ This folder contains python scripts to help identify and delete openshift(OCP) c
 The scripts make use of boto3 a python SDK(software developement kit) for AWS. You can use the scripts to only identify clusters or identify+delete clusters. 
 
 Prerequsites: 
-install boto3 : python -m pip install boto3
-install awscli : python -m pip install awscli
+install boto3 : python -m pip install boto3  
 
 To enable boto3 to communicate with your AWS account you will first need to configure credentials by following any of the below methods: 
 
-- use the [AWS CLI](http://aws.amazon.com/cli/) and run the `aws configure` command which will prompt you to enter the required credentials. 
+- Configure ~/.aws/credentials and ~/.aws/config files so that they look like this:  
 
-- configure ~/.aws/credentials and ~/.aws/config files so that they look like this: 
+   ~/.aws/config  
+[default]  
+region = us-east-1  
 
- ~/.aws/config 
-[default]
-region = us-east-1
+   ~/.aws/credentials  
+[default]  
+aws_access_key_id = xyz  
+aws_secret_access_key = abc123  
 
- ~/.aws/credentials 
-[default]
-aws_access_key_id = xyz
-aws_secret_access_key = abc123
-
-- using environment variables , export AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and AWS_DEFAULT_REGION vars with the right values. 
+- Exporting the following environment variables with the right values:  
+export AWS_ACCESS_KEY_ID=  
+export AWS_SECRET_ACCESS_KEY=  
+export AWS_DEFAULT_REGION=  
 
 ## Identify clusters 
 
 To identify clusters deployed in you AWS account in the specified region, you can use the `identify_cluster.py` script. The script takes in 2 command line arguments with the flags: -id to input your 12 digit AWS account id and -R to specify the region to search in. Note: the region specified here must match the region specified while configuring aws configs above. To search for a different region you first have to modify the aws region in the configs either by modifying ~/.aws/config or exporting AWS_DEFAULT_REGION env var again. 
 
-If there are clusters which need to be ignored/which need not be cleaned you can add the cluster name to the whitelist.json file. An example_whitelist.json file is provided for reference.**The whitelist.json file needs to be created mandatorily, copy the example_whitelist.json and make a new file called whitelist.josn, it can be left unpopulated/unchanged if no clusters need to be whitelisted.** Please note the first 2 entries in the example_whitelist file are clusters used by the ocp perfscale team as long term infrastructure and should not be deleted. 
+If there are clusters which need to be ignored/which need not be cleaned you can add the cluster name to the whitelist.json file. An example_whitelist.json file is provided for reference.**The whitelist.json file needs to be created mandatorily, copy the example_whitelist.json and make a new file called whitelist.josn, it can be left unpopulated/unchanged if no clusters need to be whitelisted.** Please note the first 2 entries in the example_whitelist file are clusters used by the ocp perfscale team as long term infrastructure and should not be deleted.  
+
+Run command: `cp example_whitelist.json whitelist.json`
 
 Once the script has run, a list of all the OCP clusters in your account in that region are displayed and a clusters.json file gets generated which can be used to generate cluster metadata as seen in the next script.
 
@@ -39,6 +41,8 @@ The `generate_metadata.py` script is used to generate a metadata.json file for e
 upon running this script a new folder named *clusters/* is created with a seperate folder for each entry in the clusters.json file. 
 An example tree schema of the generated folder is given below: 
 $ tree clusters
+
+```bash
 clusters
 ├── ci-4-10-aws-acs
 │   └── metadata.json
@@ -46,6 +50,7 @@ clusters
 │   └── metadata.json
 ├── stackrox-4-7-aws
 │   └── metadata.json
+```
 
 ## Deleting a Cluster
 
