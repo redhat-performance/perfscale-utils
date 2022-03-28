@@ -26,9 +26,9 @@ export AWS_DEFAULT_REGION=
 
 ## Identify clusters 
 
-To identify clusters deployed in you AWS account in the specified region, you can use the `identify_clusters.py` script. The script takes in 2 command line arguments with the flags: -id to input your 12 digit AWS account id and -R to specify the region to search in. Note: the region specified here must match the region specified while configuring aws configs above. To search for a different region you first have to modify the aws region in the configs either by modifying ~/.aws/config or exporting AWS_DEFAULT_REGION env var again. 
+To identify clusters deployed in you AWS account in the specified region, you can use the `identify_clusters.py` script. The script takes in 2 command line arguments with the flags: -id to input your 12 digit AWS account id and -R to specify the region to search in.  
 
-If there are clusters which need to be ignored/which need not be cleaned you can add the cluster name to the whitelist.json file. An example_whitelist.json file is provided for reference.**The whitelist.json file needs to be created mandatorily, copy the example_whitelist.json and make a new file called whitelist.josn, it can be left unpopulated/unchanged if no clusters need to be whitelisted.** Please note the first 2 entries in the example_whitelist file are clusters used by the ocp perfscale team as long term infrastructure and should not be deleted.  
+If there are clusters which need to be ignored/which need not be cleaned you can add the cluster name to the whitelist.json file. You can specify the whole cluster name or only the human readable part of the name. An example_whitelist.json file is provided for reference.**The whitelist.json file needs to be created mandatorily, copy the example_whitelist.json and make a new file called whitelist.josn, it can be left unpopulated/unchanged if no clusters need to be whitelisted.** Please note the first 2 entries in the example_whitelist file are clusters used by the ocp perfscale team as long term infrastructure and should not be deleted.  
 
 Run commands:  
 `cp example_whitelist.json whitelist.json`  
@@ -38,7 +38,7 @@ Once the script has run, a list of all the OCP clusters in your account in that 
 
 ## Generate Metadata
 
-The `generate_metadata.py` script is used to generate a metadata.json file for each of the clusters identified in clusters.json. This script takes in 2 command line arguments: -R for the default Region and -bd for the *openshift base domain* used while deploying the cluster. This metadata.json is necessary if you want to delete the cluster. A openshift install binary file uses this metadata.json file to identify and delete all resources associated with the cluster. This metadata.json will help the binary identify all the resources such as instances,volumes,elastic-ip's,vpc's,subnets etc.
+The `generate_metadata.py` script is used to generate a metadata.json file for each of the clusters identified in clusters.json. This script takes in 2 command line arguments: -R for the default Region and -bd for the *openshift base domain* both which were used while deploying the clusters. This metadata.json is necessary if you want to delete the cluster. A openshift install binary file uses this metadata.json file to identify and delete all resources associated with the cluster. This metadata.json will help the binary identify all the resources such as instances,volumes,elastic-ip's,vpc's,subnets etc.
 
 Run Command: `python3 generate_metadata.py -R <AWS region> -bd <openshift cluster base domain>`  
 

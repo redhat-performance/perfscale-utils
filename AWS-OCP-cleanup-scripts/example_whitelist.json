@@ -1,8 +1,8 @@
 {
     "tags": [
-        "kubernetes.io/cluster/cloud-bulldozer-ci-6hwqr",
-        "kubernetes.io/cluster/observability-xcbnq",
-        "kubernetes.io/cluster/dont-delete-erdft"
+        "kubernetes.io/cluster/cloud-bulldozer-ci",
+        "kubernetes.io/cluster/observability",
+        "kubernetes.io/cluster/dont-delete-7rd4t"
     ]
     
 }

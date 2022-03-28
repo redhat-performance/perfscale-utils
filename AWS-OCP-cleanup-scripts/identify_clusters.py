@@ -2,6 +2,7 @@ import boto3
 import json
 import argparse
 import sys
+import os
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--Region", "-R", help="Enter AWS Default Region",nargs=1,required=True)
@@ -14,6 +15,7 @@ if len(args.acc_id[0]) != 12:
     exit(1) 
 
 print("Default region selected: %s" % args.Region[0])
+os.environ["AWS_DEFAULT_REGION"] = args.Region[0]
 
 client = boto3.client('resourcegroupstaggingapi')
 ec2 = boto3.client('ec2')
@@ -49,7 +51,7 @@ def filter_list(key, full_list):
     return [resource.split(f"arn:aws:ec2:{args.Region[0]}:{args.acc_id[0]}:{key}")[-1] for resource in full_list if key in resource]
 
 def remove_whitelisted_tags(tags, whitelist):
-    return [tag for tag in tags if all(whitelist_tag != tag for whitelist_tag in whitelist)]
+    return [tag for tag in tags if all(whitelist_tag not in tag for whitelist_tag in whitelist)]
 
 def main():
     print("Searching for clusters, Please wait this may take a while!")
