@@ -68,14 +68,21 @@ def main():
     for cluster in clusters_to_delete:
         resources = get_resources_for_cluster({"Key": cluster, "Values": ["owned"]})
         instances = filter_list('instance/', resources)
-
+        volumes = filter_list('volume/', resources)
         if len(instances) > 0:
+            instance_vol = boto3.resource('ec2', region_name='us-west-2')
+            try:
+                volume = instance_vol.Volume(volumes[0])
+                cluster_creation_time=volume.create_time.strftime("%Y-%m-%d %H:%M:%S")
+            except:
+                cluster_creation_time="undefined"
+
             clusters_with_instances.append({
             "cluster": cluster,
-            "instance_count": len(instances)
+            "instance_count": len(instances),
+            "cluster_creation_time": cluster_creation_time
         })
             total_instances_counted += len(instances)
-
 
     print("Total instances count=",total_instances_counted)
 
